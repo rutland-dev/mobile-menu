@@ -27,7 +27,7 @@ body {
     margin-top: 18%;
     padding: 5%;
     height: 100%;
-    background-color: lightblue;
+    background-color: royalblue;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min-content, 165px));
     grid-template-rows: repeat(auto-fill, minmax(0, 25%));
