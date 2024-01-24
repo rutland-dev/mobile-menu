@@ -13,13 +13,18 @@ function buildHeader() {
 }
 
 function buildPageOne(cardList) {
-    const contentDiv = document.createElement("div");
-    contentDiv.classList.add("content-div");
+    const pageOneContainer = document.createElement("div");
+    pageOneContainer.classList.add("visible");
+    pageOneContainer.setAttribute("id", "page-1");
+
+    const pageOneContentDiv = document.createElement("div");
+    pageOneContentDiv.classList.add("content-div");
+    pageOneContainer.appendChild(pageOneContentDiv);
 
     cardList.forEach(card => {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("card-div");
-        contentDiv.appendChild(cardDiv);
+        pageOneContentDiv.appendChild(cardDiv);
 
         const cardTitle = document.createElement("h2");
         cardTitle.classList.add("card-title");
@@ -37,15 +42,79 @@ function buildPageOne(cardList) {
         cardDiv.appendChild(cardContent);
     });
 
-    return contentDiv;
+    return pageOneContainer;
 }
 
-export default function buildUI(cardList) {
+function buildPageTwo(pageTwoContent) {
+    const pageTwoContainer = document.createElement("div");
+    pageTwoContainer.classList.add("visible");
+    pageTwoContainer.setAttribute("id", "page-2");
+
+    const pageTwoContentDiv = document.createElement("div");
+    pageTwoContentDiv.classList.add("content-div");
+    pageTwoContainer.appendChild(pageTwoContentDiv);
+
+    const pageTwoTitle = document.createElement("h1");
+    pageTwoTitle.textContent = "About Section";
+    pageTwoContentDiv.appendChild(pageTwoTitle);
+
+    const pageTwoContentText = document.createElement("p");
+    pageTwoContentText.textContent = pageTwoContent;
+
+    pageTwoContentDiv.appendChild(pageTwoContentText);
+
+    return pageTwoContainer;
+}
+
+function buildNavBar(pageList) {
+    const navBarDiv = document.createElement("div");
+    navBarDiv.classList.add("nav-bar-div");
+
+    pageList.forEach(page => {
+        const pageButton = document.createElement("button");
+        pageButton.setAttribute("type", "button");
+        pageButton.classList.add("page-button");
+        pageButton.classList.add("page-button-not-clicked");
+        pageButton.setAttribute("id", `${page.page}-button`);
+        navBarDiv.appendChild(pageButton);
+        
+        pageButton.addEventListener("click", () => {
+            pageList.forEach(secondaryPage => {
+                if (page.page === secondaryPage.page) {
+                    document.querySelector(`#${page.page}`).classList.remove("hidden");
+                    document.querySelector(`#${page.page}-button`).classList.remove("page-button-not-clicked");
+                } else {
+                    const thisSecondaryPage = document.querySelector(`#${secondaryPage.page}`);
+                    const thisButton = document.querySelector(`#${secondaryPage.page}-button`);
+                    if (!thisSecondaryPage.classList.contains("hidden")) {
+                        thisSecondaryPage.classList.add("hidden");
+                    }
+                    if (!thisButton.classList.contains("page-button-not-clicked")) {
+                        thisButton.classList.add("page-button-not-clicked");
+                    }
+                }
+            });
+        });
+    });
+
+    return navBarDiv;
+}
+
+export default function buildUI(pageOneCardList, pageTwoContent, pageList) {
     const {body} = document;
 
     const headerDiv = buildHeader();
     body.appendChild(headerDiv);
 
-    const pageOneContent = buildPageOne(cardList);
-    body.appendChild(pageOneContent);
+    const pageOneContainer = buildPageOne(pageOneCardList);
+    body.appendChild(pageOneContainer);
+
+    const pageTwoContainer = buildPageTwo(pageTwoContent);
+    body.appendChild(pageTwoContainer);
+
+    const navBarDiv = buildNavBar(pageList);
+    body.appendChild(navBarDiv);
+
+    document.querySelector("#page-1-button").click();
 }
+
